@@ -1,0 +1,12 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: twitter_monitor
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/mysql_data.sql:/mysql_data.sql
