@@ -1,4 +1,6 @@
 database
 api/venv
+twitter/venv
 **/__pycache__
+**/.env
 .idea

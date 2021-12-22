@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from profiles.dto import Profile
-from services.databases import SessionLocal
+from services.database_connection import SessionLocal
 from profiles import repository
+from services.utils import validate_arroba
 
-
-router = APIRouter()
+router = APIRouter(prefix="/profiles")
 
 # Dependency
 def get_db():
@@ -16,11 +16,15 @@ def get_db():
 
 @router.get('/')
 async def list_profiles():
-    return {"msg": "Qualquer coisa"}
+    db = get_db()
+    profiles = repository.get_all_profiles(db)
+    return profiles
 
 
 @router.post('/')
 async def post_profile(profile: Profile):
-    profile = Profile(name="leo", arroba="arroba")
+    if not validate_arroba(profile.arroba):
+        raise HTTPException(status_code=400, detail="Profile not found.")
+    profile = Profile(arroba=profile.arroba)
     db = get_db()
     return repository.create_profile(db, profile)
