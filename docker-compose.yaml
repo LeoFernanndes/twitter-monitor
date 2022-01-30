@@ -10,3 +10,19 @@ services:
       - "3306:3306"
     volumes:
       - ./database/mysql_data.sql:/mysql_data.sql
+    networks:
+      - internal-network
+  
+  worker:
+    build:
+      context: ./twitter-worker
+      dockerfile: ./Dockerfile
+    env_file:
+      - twitter-worker/.env.docker
+    networks:
+      - internal-network
+
+
+networks:
+  internal-network:
+    driver: bridge
