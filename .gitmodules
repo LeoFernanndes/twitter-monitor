@@ -1,0 +1,6 @@
+[submodule "twitter_backend_fastapi"]
+	path = twitter_backend_fastapi
+	url = https://github.com/LeoFernanndes/twitter_backend_fastapi.git
+[submodule "twitter_worker"]
+	path = twitter_worker
+	url = https://github.com/LeoFernanndes/twitter_worker.git

@@ -1,5 +1,21 @@
 version: '3'
 services:
+  twitter_backend_fastapi:
+    build:    
+      context: ./twitter_backend_fastapi
+      dockerfile: ./Dockerfile
+    env_file:
+      - twitter_backend_fastapi/.env.docker
+    restart: always      
+    ports:
+      - '8000'
+    volumes:
+      - ./twitter_backend_fastapi/:/usr/app
+    depends_on:
+      - db
+    networks:
+      - internal-network
+
   db:
     image: mysql
     restart: always
@@ -15,12 +31,29 @@ services:
   
   worker:
     build:
-      context: ./twitter-worker
+      context: ./twitter_worker
       dockerfile: ./Dockerfile
+    restart: unless-stopped
     env_file:
-      - twitter-worker/.env.docker
+      - twitter_worker/.env.docker
     networks:
       - internal-network
+    depends_on:
+      - db
+      - twitter_backend_fastapi
+  
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - ./nginx/logs/:/var/log/nginx/
+    ports:
+      - 80:80
+    networks:
+      - internal-network
+    depends_on:
+      - twitter_backend_fastapi
 
 
 networks:
