@@ -5,3 +5,4 @@ twitter/venv
 **/.env
 .idea
 .vscode
+nginx/logs
